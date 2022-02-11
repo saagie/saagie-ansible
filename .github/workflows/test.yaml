@@ -1,10 +1,9 @@
-name: Ansible Lint
+name: Ansible test
 
 on: [push, pull_request]
 
 jobs:
-  build:
-
+  lint-and-test:
     runs-on: ubuntu-latest
 
     strategy:
@@ -28,3 +27,6 @@ jobs:
 
     - name: Lint Ansible Playbook
       run: ansible-lint
+
+    - name: Run Ansible Playbook
+      run: find saagie -type d -path '*/roles/*' -maxdepth 3 -execdir ansible-playbook -i localhost '{}/tests/test.yml' \;
