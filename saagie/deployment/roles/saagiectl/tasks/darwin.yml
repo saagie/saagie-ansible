@@ -1,0 +1,23 @@
+---
+- name: Download saagiectl
+  ansible.builtin.get_url:
+    url: https://storage.googleapis.com/install-archives/saagiectl/{{ saagie_version }}/saagiectl-{{ saagie_version }}-osx-x64.zip
+    dest: '{{ cachedir.path }}/saagiectl-{{ saagie_version }}.zip'
+  register: download
+
+- name: Setting saagiectl path
+  ansible.builtin.set_fact:
+    saagiectl: 'saagiectl-osx-x64/bin/saagiectl'
+
+- name: Unzip saagiectl
+  ansible.builtin.unarchive:
+    src: '{{ download.dest }}'
+    dest: '{{ (working_directory, saagie_install_directory) | join("/") }}'
+    remote_src: yes
+    list_files: yes
+  register: unzip
+  failed_when: 'saagiectl not in unzip.files'
+
+- name: Setting saagiectl path
+  ansible.builtin.set_fact:
+    saagiectl: '{{ saagie_install_directory }}/saagiectl-osx-x64/bin/saagiectl'

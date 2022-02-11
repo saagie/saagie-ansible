@@ -1,0 +1,3 @@
+.cache
+**/roles/saagiectl/tests/data/info.log
+**/roles/saagiectl/tests/data/saagiectl-*

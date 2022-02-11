@@ -1,0 +1,3 @@
+---
+loadBalancerAutoProvisioning: false
+loadBalancerType: "L4"

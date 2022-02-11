@@ -1,0 +1,68 @@
+---
+monitoring-prometheus:
+  enabled: false
+global:
+  ui:
+    externalLibEnabled: true
+  urlSuffix: "holyhope"
+  ingress:
+    base_domain: "github.io"
+    tls:
+      secretName: "saagie-common-tls"
+    host_prefix: "test"
+  security-root:
+    provider: "keycloak"
+  smtp:
+    host: "localhost"
+    port: 25
+    username: "user"
+    password: "password"
+    properties:
+      mail:
+        transport:
+          protocol: "smtp"
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  legacy: false
+  settings:
+    default_enabled_apps: "PROJECTS, TECHNOLOGY_CATALOG"
+  enabledApps:
+    manager: false
+    projects: true
+    governance: false
+    apps: false
+    operations: false
+    legacy: false
+  cidr_k8s_ip: "0.0.0.0/0"
+  prometheus:
+    exposed: false
+  securityAccess:
+    superAdminGroup: "super_administrators"
+    adminGroup: "administrators"
+    m2mUser: "m2m"
+  rbac:
+    customersPspClusterRole: "psp:saagie-common:saagie-project-cluster-psp"
+  registry: "registry.install.saagie.io"
+  technologiesRepository:
+    internal: false
+    url: "https://archive.install.saagie.io/technologies/latest/technologies.zip"
+    dedicatedRegistry: false
+  mail:
+    sender: "noreply@saagie.com"
+tags:
+  legacy: false
+settings:
+  env:
+    appsMaxStorageSizeInMb: 128
+ingress-nginx:
+  controller:
+    service:
+      type: "NodePort"
+      annotations:
+        external-dns.alpha.kubernetes.io/hostname: "test-holyhope.github.io."
+      externalTrafficPolicy: "Local"
+    config:
+      use-proxy-protocol: "true"
+      use-forwarded-headers: "false"

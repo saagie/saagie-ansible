@@ -1,0 +1,55 @@
+---
+url:
+  name: "test"
+  domain: "github.io"
+  urlSuffix: "holyhope"
+settings:
+  authMechanism: "KEYCLOAK"
+  customExtraFluentBitVolume: false
+  exposePrometheus: false
+  proxy: false
+  customLabels: false
+  enableUmdc: true
+  isExternalUiLibEnabled: true
+  monitoring:
+    prometheus:
+      enabled: false
+smtp:
+  host: "localhost"
+  port: 25
+  authEnabled: true
+  username: "user"
+  password: "password"
+  protocol: "smtp"
+  startTls: true
+  from: "noreply@saagie.com"
+platforms:
+  platforms:
+  - displayName: "test"
+    cidrBlock: "0.0.0.0/0"
+    gpuEnabled: false
+k8sCIDR:
+  cidrIpRange: "0.0.0.0/0"
+access:
+  type: "keycloakAccess"
+  superAdminGroup: "super_administrators"
+  adminGroup: "administrators"
+  m2mUser: "m2m"
+  m2mPassword: "P@ssw0rd"
+customerAccess:
+  login: "customer_admin"
+  password: "P@ssw0rd"
+deploymentMode:
+  k8sProvider: "custom"
+  registryMode: "ONESTOPSHOP"
+settingsService:
+  appsMaxStorageSizeInMb: 128
+ingressConfig:
+  loadBalancerAutoProvisioning: false
+  loadBalancerType: "L4"
+registry:
+  server: "registry.install.saagie.io"
+technologiesRepository:
+  internal: false
+  url: "https://archive.install.saagie.io/technologies/latest/technologies.zip"
+  dedicatedRegistry: false

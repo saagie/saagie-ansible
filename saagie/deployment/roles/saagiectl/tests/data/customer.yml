@@ -1,0 +1,9 @@
+---
+m2mPassword: "P@ssw0rd"
+auth:
+  customerUser:
+    login: "customer_admin"
+    password: "P@ssw0rd"
+global:
+  customer:
+    name: "test"

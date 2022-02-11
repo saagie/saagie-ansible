@@ -1,0 +1,3 @@
+---
+k8sProvider: "custom"
+registryMode: "ONESTOPSHOP"

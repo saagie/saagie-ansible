@@ -1,0 +1,11 @@
+---
+authMechanism: "KEYCLOAK"
+customExtraFluentBitVolume: false
+exposePrometheus: false
+proxy: false
+customLabels: false
+enableUmdc: true
+isExternalUiLibEnabled: true
+monitoring:
+  prometheus:
+    enabled: false
