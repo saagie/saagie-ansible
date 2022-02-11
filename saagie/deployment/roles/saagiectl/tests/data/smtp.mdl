@@ -1,0 +1,9 @@
+---
+host: "localhost"
+port: 25
+authEnabled: true
+username: "user"
+password: "password"
+protocol: "smtp"
+startTls: true
+from: "noreply@saagie.com"

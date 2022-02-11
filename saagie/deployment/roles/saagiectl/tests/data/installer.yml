@@ -1,0 +1,6 @@
+---
+deploymentMode:
+  k8sProvider: "custom"
+  registryMode: "ONESTOPSHOP"
+umdc:
+  enabled: true

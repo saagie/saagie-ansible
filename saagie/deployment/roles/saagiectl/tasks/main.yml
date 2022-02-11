@@ -1,0 +1,49 @@
+- name: Create the cache directory
+  ansible.builtin.file:
+    path: '{{ cache_directory }}'
+    state: directory
+    mode: '0755'
+  register: cachedir
+
+- name: Setting saagiectl install directory
+  ansible.builtin.set_fact:
+    saagie_install_directory: '{{ "saagiectl-" + saagie_version }}'
+
+- name: Create the install directory
+  ansible.builtin.file:
+    path: '{{ (working_directory, saagie_install_directory) | join("/") }}'
+    state: directory
+    mode: '0755'
+
+- include_tasks: linux.yml
+  when: 'ansible_facts["os_family"] not in ["Darwin", "Windows"]'
+- include_tasks: darwin.yml
+  when: 'ansible_facts["os_family"] == "Darwin"'
+- include_tasks: windows.yml
+  when: 'ansible_facts["os_family"] == "Windows"'
+
+- name: Run saagiectl configure
+  ansible.builtin.command:
+    argv:
+      - '{{ saagiectl }}'
+      - configure
+    chdir: '{{ working_directory }}'
+  changed_when: true
+
+- name: Run saagiectl validate
+  ansible.builtin.command:
+    argv:
+      - '{{ saagiectl }}'
+      - validate
+      - all
+    chdir: '{{ working_directory }}'
+  changed_when: true
+
+- name: Run saagiectl install
+  ansible.builtin.command:
+    argv:
+      - '{{ saagiectl }}'
+      - install
+      - all
+    chdir: '{{ working_directory }}'
+  changed_when: true
