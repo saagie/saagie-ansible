@@ -2,3 +2,7 @@
 saagie_version: latest
 cache_directory: .cache
 working_directory: ''
+argv:
+- ["configure"]
+- ["validate"]
+- ["install", "all"]
