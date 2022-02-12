@@ -1,3 +1,5 @@
 .cache
 **/roles/saagiectl/tests/data/info.log
 **/roles/saagiectl/tests/data/saagiectl-*
+**/roles/saagiectl/tests/does-not-exist
+**/roles/saagiectl/tests/does-not-exist-2
