@@ -18,7 +18,7 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Run Ansible Playbook
-      run: find . -type f -name 'galaxy.yml' -maxdepth 3 | xargs dirname | xargs ansible-galaxy collection build
+      run: ansible-galaxy collection build
 
     - uses: actions/upload-artifact@v2
       with:
