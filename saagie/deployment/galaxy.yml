@@ -55,3 +55,7 @@ homepage: https://github.com/holyhope/saagie-ansible
 
 # The URL to the collection issue tracker
 issues: https://github.com/holyhope/saagie-ansible/issues
+
+build_ignore:
+- .cache
+- roles/saagiectl/tests/does-not-exist*
