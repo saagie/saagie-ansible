@@ -29,4 +29,4 @@ jobs:
       run: ansible-lint
 
     - name: Run Ansible Playbook
-      run: find . -type d -path '*/roles/*' -maxdepth 4 -execdir ansible-playbook -i localhost '{}/tests/test.yml' \;
+      run: find roles -type d -maxdepth 1 -execdir ansible-playbook -i localhost '{}/tests/test.yml' \;
