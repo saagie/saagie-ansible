@@ -1,6 +1,12 @@
 name: Ansible build
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+    branches:
+    - '**'
 
 jobs:
   build:
@@ -17,7 +23,7 @@ jobs:
 
     - uses: actions/checkout@v2
 
-    - name: Run Ansible Playbook
+    - name: Build Ansible collection
       run: ansible-galaxy collection build
 
     - uses: actions/upload-artifact@v2
@@ -25,3 +31,9 @@ jobs:
         name: collections
         path: '*.tar.gz'
         if-no-files-found: error
+
+    - name: Publish Ansible collection
+      if: github.event_name == 'push'
+      env:
+        ANSIBLE_GALAXY_API_KEY: ${{ secrets.ANSIBLE_GALAXY_API_KEY }}
+      run: ls -1 *.tar.gz | xargs ansible-galaxy collection publish --api-key "${ANSIBLE_GALAXY_API_KEY}"
