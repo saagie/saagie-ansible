@@ -1,7 +1,7 @@
 ---
 - name: Download saagiectl
   ansible.builtin.get_url:
-    url: https://storage.googleapis.com/install-archives/saagiectl/{{ saagie_version }}/saagiectl-{{ saagie_version }}-linux-x64.zip
+    url: https://archive.install.saagie.io/saagiectl/{{ saagie_version }}/saagiectl-{{ saagie_version }}-linux-x64.zip
     dest: '{{ cachedir.path }}/saagiectl-{{ saagie_version }}.zip'
   register: download
 
