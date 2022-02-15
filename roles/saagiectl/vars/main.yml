@@ -6,3 +6,4 @@ argv:
 - ["configure"]
 - ["validate", "all"]
 - ["install", "all"]
+download_url: ''
