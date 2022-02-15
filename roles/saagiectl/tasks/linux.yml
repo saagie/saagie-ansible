@@ -1,7 +1,7 @@
 ---
 - name: Download saagiectl
   ansible.builtin.get_url:
-    url: https://archive.install.saagie.io/saagiectl/{{ saagie_version }}/saagiectl-{{ saagie_version }}-linux-x64.zip
+    url: '{{ download_url | defaul("https://archive.install.saagie.io/saagiectl/" + saagie_version + "/saagiectl-" + saagie_version + "-linux-x64.zip") }}'
     dest: '{{ cachedir.path }}/saagiectl-{{ saagie_version }}.zip'
   register: download
 
