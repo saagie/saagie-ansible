@@ -1,0 +1,8 @@
+---
+user: prometheus
+group: prometheus
+
+root_dir: /opt/prometheus/exporters
+dist_dir: "{{ root_dir }}/dist"
+log_dir: /var/log/prometheus
+conf_dir: /etc/prometheus/exporters

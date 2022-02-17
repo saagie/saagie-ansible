@@ -1,0 +1,19 @@
+[Unit]
+Description=Prometheus {{ name }}
+After=network.target
+
+[Service]
+Type=simple
+User={{ prometheus_exporters_common_user }}
+Group={{ prometheus_exporters_common_group }}
+{% if env_values is defined %}
+{% for value in env_values %}
+Environment={{ value }}
+{% endfor %}
+{% endif %}
+ExecStart={{ prometheus_exporters_common_root_dir }}/{{ name }} {{ cli_options | default("") }}
+SyslogIdentifier=prometheus_{{ name }}
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

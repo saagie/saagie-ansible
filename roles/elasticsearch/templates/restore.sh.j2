@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+
+LAST_SNAPSHOT=""
+
+echo "Initializing Elasticsearch restore"
+
+RESPONSE=$(curl --write-out '%{http_code}' --silent --output /dev/null http://localhost:9200/_snapshot/backup)
+
+if [ $RESPONSE -ne "200" ]; then
+    echo "Repository not initialized, creating..."
+    SNAPSHOT_REPO_STATUS=$(curl --write-out '%{http_code}' --silent --output /dev/null -X PUT localhost:9200/_snapshot/backup -H 'Content-Type: application/json' -d '{"type": "fs","settings": {"location": "{{ elastic_backup.savepath }}"}}')
+    if [ $SNAPSHOT_REPO_STATUS -ne "200" ]; then
+        echo "Error during repository creation, please verify path.repo parameter in ES config and fs rights"
+        exit 1
+    fi
+fi
+echo "Repository found, searching for snapshot..."
+
+LAST_SNAPSHOT_OUTPUT=$(curl --silent 'localhost:9200/_snapshot/backup/*')
+
+RESULTS=$( echo $LAST_SNAPSHOT_OUTPUT | jq -r '.snapshots| length' )
+
+if [ $RESULTS -gt 0 ]; then
+
+    LAST_SNAPSHOT=$( echo $LAST_SNAPSHOT_OUTPUT | jq -r '.snapshots|.[-1]|.snapshot')
+    echo "Snapshot found: ${LAST_SNAPSHOT}. Purging indexes and restoring..."
+
+else
+
+    echo "No snapshot found."
+    exit 1
+
+fi
+
+PURGE=$(curl --write-out '%{http_code}' --silent --output /dev/null -X DELETE 'http://localhost:9200/*')
+if [ $PURGE -ne "200" ]; then
+    echo "Error while purging indexes"
+    exit 1
+fi
+
+RESTORE=$(curl --silent -X POST "localhost:9200/_snapshot/backup/${LAST_SNAPSHOT}/_restore?pretty")
+echo $RESTORE

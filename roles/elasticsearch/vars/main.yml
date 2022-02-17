@@ -1,0 +1,6 @@
+---
+data_dir: /data/elasticsearch
+
+backup:
+  savepath: /data/elastic_backup
+  binpath: /opt/datamart_backup

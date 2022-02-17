@@ -1,6 +1,6 @@
 galaxy_info:
-  author: Pierre Péronnet
-  description: Manage saagiectl installation
+  author: Pierre PÉRONNET
+  description: Install prometheus exporter
   company: Saagie
 
   # If the issue tracker for your role is not on github, uncomment the
@@ -14,7 +14,7 @@ galaxy_info:
   # - GPL-3.0-only
   # - Apache-2.0
   # - CC-BY-4.0
-  license: GPL-2.0-or-later
+  license: Apache-2.0
 
   min_ansible_version: 2.9
 
@@ -27,25 +27,8 @@ galaxy_info:
   # To view available platforms and versions (or releases), visit:
   # https://galaxy.ansible.com/api/v1/platforms/
   #
-  # platforms:
-  # - name: Fedora
-  #   versions:
-  #   - all
-  #   - 25
-  # - name: SomePlatform
-  #   versions:
-  #   - all
-  #   - 1.0
-  #   - 7
-  #   - 99.99
   platforms:
-    - name: MacOSX
-      versions:
-        - all
     - name: Debian
-      versions:
-        - all
-    - name: Ubuntu
       versions:
         - all
 

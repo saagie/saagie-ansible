@@ -1,0 +1,135 @@
+---
+- name: Check if variables are defined
+  ansible.builtin.fail:
+    msg: 'variable {{ item }} not defined'
+  loop:
+    - download_url
+    - name
+    - release_name
+    - release_version
+    - port
+  when: item is not defined
+
+- name: 'Allow monitoring server to reach server'
+  community.general.ufw:
+    rule: allow
+    src: '{{ monitoring_service_ip | default("any") }}'
+    port: '{{ port }}'
+  become: true
+  failed_when: false
+  when: ansible_distribution == "Ubuntu"
+
+- name: install needed packages
+  ansible.builtin.package:
+    name:
+      - curl
+      - tar
+      - bzip2
+    state: present
+
+- name: install python packages
+  ansible.builtin.pip:
+    name: '{{ python_modules }}'
+  when: python_filename is defined
+
+- name: create prometheus system group
+  ansible.builtin.group:
+    name: '{{ group }}'
+    system: true
+    state: present
+
+- name: create prometheus system user
+  ansible.builtin.user:
+    name: '{{ user }}'
+    system: true
+    shell: '/sbin/nologin'
+    group: '{{ group }}'
+    createhome: false
+
+- name: create prometheus directories
+  ansible.builtin.file:
+    path: '{{ item }}'
+    state: directory
+    owner: '{{ user }}'
+    group: '{{ group }}'
+    mode: 0755
+  with_items:
+    - '{{ root_dir }}'
+    - '{{ dist_dir }}'
+    - '{{ log_dir }}'
+    - '{{ conf_dir }}'
+
+- name: copy python exporter
+  ansible.builtin.copy:
+    src: '{{ python_filename }}'
+    dest: '{{ root_dir }}/{{ name }}'
+    owner: '{{ user }}'
+    group: '{{ group }}'
+    mode: +x
+  when: python_modules is defined
+
+
+- name: download exporter binary
+  ansible.builtin.get_url:
+    url: '{{ download_url }}'
+    dest: '{{ dist_dir }}/{{ release_name }}.tar.gz'
+  when: python_modules is not defined
+
+- name: unarchive binary tarball
+  ansible.builtin.unarchive:
+    copy: false
+    src: '{{ dist_dir }}/{{ release_name }}.tar.gz'
+    dest: '{{ dist_dir }}'
+    creates: '{{ dist_dir }}/{{ release_name }}/{{ name }}'
+  register: updated
+  notify:
+    - restart exporter
+  when: python_modules is not defined
+
+- name: update group and owner for files
+  ansible.builtin.file:
+    path: '{{ release_name }}'
+    state: directory
+    recurse: true
+    owner: '{{ user }}'
+    group: '{{ group }}'
+
+- name: create symlink to the current release
+  ansible.builtin.file:
+    src: '{{ dist_dir }}/{{ release_name }}/{{ name }}'
+    path: '{{ root_dir }}/{{ name }}'
+    state: link
+  when: python_filename is not defined
+
+- name: create systemd service unit
+  ansible.builtin.template:
+    src: etc/systemd/system/prometheus-exporter.service.j2
+    dest: '/etc/systemd/system/prometheus-{{ name }}.service'
+    owner: root
+    group: root
+    mode: 0644
+  when: service_mgr | default(ansible_service_mgr) == "systemd"
+  notify:
+    - reload exporter service
+    - reenable exporter service
+    - restart exporter
+
+- name: create init.d service unit
+  ansible.builtin.template:
+    src: etc/init.d/prometheus-exporter.j2
+    dest: '/etc/init.d/prometheus-{{ name }}'
+    owner: root
+    group: root
+    mode: 0755
+  when: service_mgr | default(ansible_service_mgr) == "upstart"
+  notify:
+    - restart exporter
+
+- name: trigger handlers
+  meta: flush_handlers
+
+- name: ensure prometheus exporter service is enabled and started
+  ansible.builtin.service:
+    name: 'prometheus-{{ name }}'
+    state: started
+    enabled: true

@@ -17,7 +17,7 @@ readme: README.md
 # A list of the collection's content authors. Can be just the name or in the format 'Full Name <email> (url)
 # @nicks:irc/im.site#channel'
 authors:
-- Pierre PÉRONNET (https://github.com/holyhope/)
+  - Pierre PÉRONNET (https://github.com/holyhope/)
 
 
 ### OPTIONAL but strongly recommended
@@ -28,7 +28,7 @@ description: Deploy saagie on you infrastructure
 # Either a single license or a list of licenses for content inside of a collection. Ansible Galaxy currently only
 # accepts L(SPDX,https://spdx.org/licenses/) licenses. This key is mutually exclusive with 'license_file'
 license:
-- GPL-2.0-or-later
+  - Apache-2.0
 
 # The path to the license file for the collection. This path is relative to the root of the collection. This key is
 # mutually exclusive with 'license'
@@ -57,5 +57,5 @@ homepage: https://github.com/holyhope/saagie-ansible
 issues: https://github.com/holyhope/saagie-ansible/issues
 
 build_ignore:
-- .cache
-- roles/saagiectl/tests/does-not-exist*
+  - .cache
+  - roles/saagiectl/tests/does-not-exist*
