@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+export PATH=/bin:/usr/bin:/usr/local/bin
+
+#CHECK SNAPSHOT REPO PRESENCE
+RESPONSE=$(curl --write-out '%{http_code}' --silent --output /dev/null http://localhost:9200/_snapshot/backup)
+
+if [ $RESPONSE -ne "200" ]; then
+    echo "Repository not initialized, creating..."
+    SNAPSHOT_REPO_STATUS=$(curl --write-out '%{http_code}' --silent --output /dev/null -X PUT localhost:9200/_snapshot/backup -H 'Content-Type: application/json' -d '{"type": "fs","settings": {"location": "{{ elastic_backup.savepath }}"}}')
+    if [ $SNAPSHOT_REPO_STATUS -ne "200" ]; then
+        echo "Error during repository creation, please verify path.repo parameter in ES config and fs rights"
+        exit 1
+    fi
+fi
+
+echo "Repository found, cleaning old snapshots..."
+curl --silent --output /dev/null -X DELETE http://localhost:9200/_snapshot/backup/*
+
+echo "Creating current snapshot..."
+curl -X PUT "localhost:9200/_snapshot/backup/%3Csnapshot-%7Bnow%2Fd%7D%3E?wait_for_completion=true&pretty"

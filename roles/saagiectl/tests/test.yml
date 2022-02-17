@@ -7,8 +7,8 @@
       cache_directory: does-not-exist
       working_directory: does-not-exist-2
       argv:
-      - ["--help"]
+        - ["--help"]
     - role: saagiectl
       working_directory: data
       argv:
-      - ["configure"]
+        - ["configure"]

@@ -1,0 +1,33 @@
+---
+- include_tasks: backup.yml
+
+- name: Create data dir
+  ansible.builtin.file:
+    path: '{{ data_dir }}'
+    state: directory
+    owner: elasticsearch
+    group: elasticsearch
+    mode: '0750'
+
+- name: Install java
+  become: true
+  ansible.builtin.include_role:
+    name: 'geerlingguy.java'
+
+- name: Install ElasticSearch
+  become: true
+  ansible.builtin.include_role:
+    name: 'geerlingguy.elasticsearch'
+  vars:
+    elasticsearch_path_data: '{{ data_dir }}'
+
+- name: Install prometheus exporter
+  become: true
+  ansible.builtin.include_role:
+    name: prometheus_exporter
+  vars:
+    download_url: 'https://github.com/justwatchcom/elasticsearch_exporter/releases/download/v1.1.0/elasticsearch_exporter-1.1.0.linux-amd64.tar.gz'
+    name: elasticsearch_exporter
+    port: 9114
+    release_name: elasticsearch_exporter-1.1.0.linux-amd64
+    release_version: 1.1.0

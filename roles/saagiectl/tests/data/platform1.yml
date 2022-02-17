@@ -3,5 +3,5 @@ platform:
   id: 1
   displayName: "test"
   jobAuthorizedEgresses:
-  - cidrBlock: "0.0.0.0/0"
+    - cidrBlock: "0.0.0.0/0"
   gpuEnabled: false

@@ -13,8 +13,8 @@
   ansible.builtin.unarchive:
     src: '{{ download.dest }}'
     dest: '{{ (working_directory, saagie_install_directory) | join("/") }}'
-    remote_src: yes
-    list_files: yes
+    remote_src: true
+    list_files: true
   register: unzip
   failed_when: 'saagiectl not in unzip.files'
 

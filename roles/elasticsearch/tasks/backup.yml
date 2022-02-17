@@ -1,0 +1,40 @@
+---
+- name: Install prerequisites
+  ansible.builtin.package:
+    name:
+      - curl
+      - jq
+    state: present
+
+- name: Create elasticsearch user
+  ansible.builtin.user:
+    name: elasticsearch
+    comment: Elastic Search
+
+- name: Create bin directory
+  ansible.builtin.file:
+    path: '{{ backup.binpath }}'
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Create backup directory
+  ansible.builtin.file:
+    path: '{{ backup.savepath }}'
+    state: directory
+    owner: elasticsearch
+    group: elasticsearch
+    mode: '0750'
+
+- name: Deploy backup script
+  ansible.builtin.template:
+    src: backup.sh
+    dest: '{{ backup.binpath }}/backup-elastic.sh'
+    mode: u+rwx
+
+- name: Deploy restore script
+  ansible.builtin.template:
+    src: restore.sh
+    dest: '{{ backup.binpath }}/restore-elastic.sh'
+    mode: u+rwx

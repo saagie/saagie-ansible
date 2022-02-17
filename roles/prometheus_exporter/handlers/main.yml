@@ -1,0 +1,15 @@
+---
+- name: reenable exporter service
+  systemd:
+    name: 'prometheus-{{ name }}.service'
+    enabled: true
+
+- name: reload exporter service
+  systemd:
+    name: 'prometheus-{{ name }}.service'
+    daemon-reload: true
+
+- name: restart exporter
+  service:
+    name: 'prometheus-{{ name }}'
+    state: restarted
