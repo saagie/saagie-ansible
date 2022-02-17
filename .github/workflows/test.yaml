@@ -30,3 +30,17 @@ jobs:
 
     - name: Run Ansible Playbook
       run: find roles -type d -maxdepth 1 -execdir ansible-playbook -i localhost '{}/tests/test.yml' \;
+
+    - name: Build Ansible collection
+      run: ansible-galaxy collection build
+
+    - name: Install Ansible collection
+      run: ansible-galaxy collection install saagie-deployment-*.tar.gz -p galaxy
+
+    - name: Install Ansible test requirements
+      run: pip install yamllint
+
+    - name: Test Ansible collection
+      run: |-
+        cd galaxy/ansible_collections/saagie/deployment
+        ansible-test sanity --local
