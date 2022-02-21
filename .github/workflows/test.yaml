@@ -24,26 +24,20 @@ jobs:
       run: pip install 'ansible==${{ matrix.ansible }}' ansible-lint
 
     - uses: actions/checkout@v2
+      with:
+        path: ansible_collections/saagie/deployment
 
     - name: Lint Ansible Playbook
       run: ansible-lint
+      working-directory: ./ansible_collections/saagie/deployment
 
     - name: Run Ansible Playbook
       run: find roles -type d -maxdepth 1 -execdir ansible-playbook -i localhost '{}/tests/test.yml' \;
-
-    - name: Build Ansible collection
-      run: ansible-galaxy collection build
-
-    - name: Install Ansible collection
-      run: ansible-galaxy collection install saagie-deployment-*.tar.gz -p galaxy
-
-    - name: Install Ansible test requirements
-      run: pip install yamllint
+      working-directory: ./ansible_collections/saagie/deployment
 
     - name: Test Ansible collection
-      run: |-
-        cd galaxy/ansible_collections/saagie/deployment
-        ansible-test sanity --local
+      run: ansible-test sanity --docker
+      working-directory: ./ansible_collections/saagie/deployment
 
   version-check:
     runs-on: ubuntu-latest
