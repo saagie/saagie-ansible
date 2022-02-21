@@ -44,3 +44,15 @@ jobs:
       run: |-
         cd galaxy/ansible_collections/saagie/deployment
         ansible-test sanity --local
+
+  version-check:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Ensure version changed
+      if: github.event_name == 'pull_request'
+      run: git diff "origin/$GITHUB_BASE_REF" -- galaxy.yml 2| grep -- '-version:'
