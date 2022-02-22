@@ -7,3 +7,5 @@ argv:
   - ["validate", "all"]
   - ["install", "all"]
 download_url: ''
+download: true
+zip_location: ''
