@@ -10,19 +10,16 @@
     mode: '0750'
 
 - name: Install java
-  become: true
   ansible.builtin.include_role:
     name: 'geerlingguy.java'
 
 - name: Install ElasticSearch
-  become: true
   ansible.builtin.include_role:
     name: 'geerlingguy.elasticsearch'
   vars:
     elasticsearch_path_data: '{{ data_dir }}'
 
 - name: Install prometheus exporter
-  become: true
   ansible.builtin.include_role:
     name: prometheus_exporter
   vars:
