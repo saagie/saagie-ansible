@@ -29,12 +29,12 @@
 
 - name: Deploy backup script
   ansible.builtin.template:
-    src: backup.sh
+    src: backup.sh.j2
     dest: '{{ backup.binpath }}/backup-elastic.sh'
     mode: u+rwx
 
 - name: Deploy restore script
   ansible.builtin.template:
-    src: restore.sh
+    src: restore.sh.j2
     dest: '{{ backup.binpath }}/restore-elastic.sh'
     mode: u+rwx
