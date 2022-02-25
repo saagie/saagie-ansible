@@ -8,7 +8,7 @@ RESPONSE=$(curl --write-out '%{http_code}' --silent --output /dev/null http://lo
 
 if [ $RESPONSE -ne "200" ]; then
     echo "Repository not initialized, creating..."
-    SNAPSHOT_REPO_STATUS=$(curl --write-out '%{http_code}' --silent --output /dev/null -X PUT localhost:9200/_snapshot/backup -H 'Content-Type: application/json' -d '{"type": "fs","settings": {"location": "{{ elastic_backup.savepath }}"}}')
+    SNAPSHOT_REPO_STATUS=$(curl --write-out '%{http_code}' --silent --output /dev/null -X PUT localhost:9200/_snapshot/backup -H 'Content-Type: application/json' -d '{"type": "fs","settings": {"location": "{{ backup.savepath }}"}}')
     if [ $SNAPSHOT_REPO_STATUS -ne "200" ]; then
         echo "Error during repository creation, please verify path.repo parameter in ES config and fs rights"
         exit 1
