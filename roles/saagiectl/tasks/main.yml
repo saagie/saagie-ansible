@@ -45,3 +45,6 @@
     chdir: '{{ working_directory }}'
   changed_when: true
   with_list: '{{ argv }}'
+
+- include_tasks: patches/SRI-724.yml
+  when: http_proxy or https_proxy
