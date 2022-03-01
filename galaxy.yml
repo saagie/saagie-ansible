@@ -9,7 +9,7 @@ namespace: saagie
 name: deployment
 
 # The version of the collection. Must be compatible with semantic versioning
-version: 1.1.1
+version: 1.1.2
 
 # The path to the Markdown (.md) readme file. This path is relative to the root of the collection
 readme: README.md
@@ -18,6 +18,7 @@ readme: README.md
 # @nicks:irc/im.site#channel'
 authors:
   - Pierre PÉRONNET (https://github.com/holyhope/)
+  - Charles TEINTURIER (https://github.com/teintuc/)
 
 
 ### OPTIONAL but strongly recommended
@@ -45,16 +46,16 @@ tags: []
 dependencies: {}
 
 # The URL of the originating SCM repository
-repository: https://github.com/holyhope/saagie-ansible
+repository: https://github.com/saagie/saagie-ansible
 
 # The URL to any online docs
-documentation: https://github.com/holyhope/saagie-ansible
+documentation: https://github.com/saagie/saagie-ansible
 
 # The URL to the homepage of the collection/project
-homepage: https://github.com/holyhope/saagie-ansible
+homepage: https://github.com/saagie/saagie-ansible
 
 # The URL to the collection issue tracker
-issues: https://github.com/holyhope/saagie-ansible/issues
+issues: https://github.com/saagie/saagie-ansible/issues
 
 build_ignore:
   - .cache
