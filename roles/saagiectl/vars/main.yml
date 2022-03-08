@@ -9,3 +9,6 @@ argv:
 download_url: ''
 download: true
 zip_location: ''
+
+http_proxy: false
+https_proxy: false

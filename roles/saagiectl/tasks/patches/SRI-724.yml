@@ -1,0 +1,66 @@
+---
+- name: Fetch neighbour services
+  kubernetes.core.k8s_info:
+    namespace: saagie-common
+    api_version: v1
+    kind: Service
+  register: services
+
+- name: Compute internal hostnames
+  ansible.builtin.set_fact:
+    non_proxy_hosts: '{{ services.resources | map(attribute="metadata") | map(attribute="name") | join("|") }}|*.saagie-common|*.k8s.cluster'
+
+- name: Fetch current command line
+  kubernetes.core.k8s_info:
+    name: '{{ item }}'
+    namespace: saagie-common
+    api_version: v1
+    kind: Deployment
+  loop:
+    - saagie-common-technology-manager
+  register: current
+
+- name: Patch java deployment
+  kubernetes.core.k8s:
+    state: patched
+    kind: '{{ item.kind }}'
+    name: '{{ item.metadata.name }}'
+    namespace: '{{ item.metadata.namespace }}'
+    definition:
+      spec:
+        template:
+          spec:
+            containers:
+              - name: '{{ item.spec.template.spec.containers[0].name }}'
+                env: >-
+                  {{
+                    item.spec.template.spec.containers[0].env
+                      | combine([
+                        item.spec.template.spec.containers[0].env
+                          | selectattr("name", "equalto", "JAVA_TOOL_OPTIONS")
+                          | rejectattr("value", "match", "(^|\\s)-Dhttps?\.proxyHost[\\s=]")
+                          | first
+                          | combine({
+                            "value": (
+                              (item.spec.template.spec.containers[0].env
+                                | selectattr("name", "equalto", "JAVA_TOOL_OPTIONS")
+                                | map(attribute="value")
+                                | first
+                              ) + " " + java_tool_options)
+                          })
+                      ])
+                  }}
+    wait: true
+  loop: '{{ current.results | map(attribute="resources") | map("first") | list }}'
+  vars:
+    java_tool_options: >-
+      {{
+        [
+          "-Dhttp.proxyHost=" + http_proxy.split(":")[0],
+          "-Dhttp.proxyPort=" + http_proxy.split(":")[1],
+          "-Dhttps.proxyHost=" + https_proxy.split(":")[0],
+          "-Dhttps.proxyPort=" + https_proxy.split(":")[1],
+          "-Dhttp.nonProxyHosts=" + non_proxy_hosts,
+          "-Dhttps.nonProxyHosts=" + non_proxy_hosts
+        ] | join(" ")
+      }}
